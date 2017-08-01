@@ -2,11 +2,12 @@ package me.costa.gustavo.app;
 
 import java.net.MalformedURLException;
 
+import javax.websocket.server.ServerContainer;
+
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import org.eclipse.jetty.websocket.jsr356.server.ServerContainer;
 import org.eclipse.jetty.websocket.jsr356.server.deploy.WebSocketServerContainerInitializer;
   
 public class Started {  
@@ -29,7 +30,7 @@ public class Started {
           
         try {  
             ServerContainer wscontainer = WebSocketServerContainerInitializer.configureContext(context);  
-            wscontainer.addEndpoint(ImageWebSocket.class);  
+            wscontainer.addEndpoint(ImageWebSocketJSR.class);  
               
             server.start();  
             System.out.println("Listening port : " + port );  

@@ -9,7 +9,7 @@
 					var ws = new WebSocket("ws://localhost:8080/image");
 
 					ws.onopen = function () {
-					  ws.send('img');
+					  ws.send('image1');
 					};
 
 					ws.onerror = function (e) {
@@ -21,7 +21,7 @@
 					var img;
 					ws.onmessage = function (e) {
 						$("#image").attr('src',  'data:image/jpg;base64,'+e.data);
-						ws.send('img');
+						ws.send('image1');
 					}
 				}
 									   
