@@ -3,7 +3,9 @@ package me.costa.gustavo.app;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Base64;
 
 import javax.imageio.ImageIO;
@@ -21,7 +23,9 @@ public class OpenCVHelper {
 	
     private VideoCapture camera = null;  
 	private OpenCVHelper() {
-		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);  
+		System.loadLibrary(Core.NATIVE_LIBRARY_NAME); 
+		//System.loadLibrary("libopencv_java320");
+		//loadLibraries();
 		camera = new VideoCapture(0);
 		camera.set(Videoio.CV_CAP_PROP_FRAME_WIDTH, 640);  
         camera.set(Videoio.CV_CAP_PROP_FRAME_HEIGHT, 480); 
@@ -32,8 +36,9 @@ public class OpenCVHelper {
 	
 	public BufferedImage getBufferedImage() {
         Mat frame = new Mat();  
+        Processor processor = new Processor();
         if (camera.read(frame)){  
-        	return convertMatToBufferedImage(frame);
+        	return convertMatToBufferedImage(processor.detect(frame));
         }
         return null;
 	}

@@ -15,10 +15,7 @@
 				<version>9.2.6.v20141205</version>
 			</plugin>
 		</plugins>
-
-
 	</build>
-	
 	<dependencies>
 		<dependency>
 			<groupId>org.deeplearning4j</groupId>
@@ -30,15 +27,11 @@
 			<artifactId>jetty-all</artifactId>
 			<version>9.2.6.v20141205</version>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.openpnp</groupId>
 			<artifactId>opencv</artifactId>
 			<version>3.2.0-0</version>
 		</dependency>
-
-
-
-
-
+ -->
 	</dependencies>
 </project>

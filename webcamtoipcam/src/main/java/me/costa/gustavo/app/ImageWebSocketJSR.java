@@ -3,7 +3,7 @@ package me.costa.gustavo.app;
 
 import java.io.IOException;
 
-import javax.websocket.Session;
+import org.eclipse.jetty.websocket.api.Session;
 
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
@@ -25,7 +25,7 @@ public class ImageWebSocketJSR {
 		if ("img".equals(message)) {
 			String image = OpenCVHelper.getInstance().getBase64Image();
 			if (image != null) {
-				session.getBasicRemote().sendText(image);
+				session.getRemote().sendString(image);
 			} else {
 				System.out.println("Error: Null image");
 			}

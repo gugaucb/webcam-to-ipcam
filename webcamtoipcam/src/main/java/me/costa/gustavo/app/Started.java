@@ -27,10 +27,11 @@ public class Started {
         holderHome.setInitParameter("dirAllowed","true");  
         holderHome.setInitParameter("pathInfoOnly","true");  
         context.addServlet(holderHome,"/*");  
+        context.addServlet(ToUpperWebSocketServlet.class, "/image1");
           
         try {  
             ServerContainer wscontainer = WebSocketServerContainerInitializer.configureContext(context);  
-            wscontainer.addEndpoint(ImageWebSocketJSR.class);  
+           // wscontainer.addEndpoint(ToUpperWebSocketServlet.class);  
               
             server.start();  
             System.out.println("Listening port : " + port );  
