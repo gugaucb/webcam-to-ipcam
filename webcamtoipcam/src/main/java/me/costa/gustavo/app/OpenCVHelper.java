@@ -47,20 +47,20 @@ public class OpenCVHelper {
 
 	}
 
-	public BufferedImage getBufferedImage() {
+	public BufferedImage getBufferedImage() throws IOException {
 		Processor processor = new Processor();
 		if (image == null) {
 			Mat frame = new Mat();
 			if (camera.read(frame)) {
-				return convertMatToBufferedImage(processor.detect(frame));
+				return Util.convertMatToBufferedImage(processor.detect(frame));
 			}
 			return null;
 		}else{
-			return convertMatToBufferedImage(processor.detect(bufferedImageToMat(image)));
+			return Util.convertMatToBufferedImage(processor.detect(Util.bufferedImageToMat(image)));
 		}
 	}
 
-	public String getBase64Image() {
+	public String getBase64Image() throws IOException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		BufferedImage image = this.getBufferedImage();
 		if (image != null) {
@@ -89,35 +89,4 @@ public class OpenCVHelper {
 		return null;
 	}
 
-	private static BufferedImage convertMatToBufferedImage(Mat mat) {
-		byte[] data = new byte[mat.width() * mat.height() * (int) mat.elemSize()];
-		int type;
-		mat.get(0, 0, data);
-		switch (mat.channels()) {
-		case 1:
-			type = BufferedImage.TYPE_BYTE_GRAY;
-			break;
-		case 3:
-			type = BufferedImage.TYPE_3BYTE_BGR;
-			byte b;
-			for (int i = 0; i < data.length; i = i + 3) {
-				b = data[i];
-				data[i] = data[i + 2];
-				data[i + 2] = b;
-			}
-			break;
-		default:
-			throw new IllegalStateException("Unsupported number of channels");
-		}
-		BufferedImage out = new BufferedImage(mat.width(), mat.height(), type);
-		out.getRaster().setDataElements(0, 0, mat.width(), mat.height(), data);
-		return out;
-	}
-
-	public static Mat bufferedImageToMat(BufferedImage bi) {
-		Mat mat = new Mat(bi.getHeight(), bi.getWidth(), CvType.CV_8UC3);
-		byte[] data = ((DataBufferByte) bi.getRaster().getDataBuffer()).getData();
-		mat.put(0, 0, data);
-		return mat;
-	}
 }

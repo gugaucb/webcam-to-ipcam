@@ -22,16 +22,26 @@
 			<artifactId>deeplearning4j-core</artifactId>
 			<version>0.8.0</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.nd4j/nd4j-native-platform -->
+		<dependency>
+			<groupId>org.nd4j</groupId>
+			<artifactId>nd4j-native-platform</artifactId>
+			<version>0.9.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.nd4j</groupId>
+			<artifactId>nd4j-native</artifactId>
+			<version>0.9.0</version>
+			<scope>test</scope>
+		</dependency>
+
 		<dependency>
 			<groupId>org.eclipse.jetty.aggregate</groupId>
 			<artifactId>jetty-all</artifactId>
 			<version>9.2.6.v20141205</version>
 		</dependency>
-		<!-- <dependency>
-			<groupId>org.openpnp</groupId>
-			<artifactId>opencv</artifactId>
-			<version>3.2.0-0</version>
-		</dependency>
- -->
+		<!-- <dependency> <groupId>org.openpnp</groupId> <artifactId>opencv</artifactId> 
+			<version>3.2.0-0</version> </dependency> -->
 	</dependencies>
 </project>
