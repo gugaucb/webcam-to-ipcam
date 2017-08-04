@@ -33,10 +33,9 @@ public class Processor {
 	// Create a constructor method
 	public Processor() {
 
-		face_cascade = new CascadeClassifier(
-				"/usr/local/Cellar/opencv3/3.2.0/share/OpenCV/haarcascades/haarcascade_profileface.xml");
-		// face_cascade=new
-		// CascadeClassifier("D:\\Desenvolvimento\\Projetos\\webcam-to-ipcam\\haarcascades\\haarcascade_profileface.xml");
+		//face_cascade = new CascadeClassifier("/usr/local/Cellar/opencv3/3.2.0/share/OpenCV/haarcascades/haarcascade_profileface.xml");
+		 face_cascade=new
+		 CascadeClassifier("D:\\Desenvolvimento\\Projetos\\webcam-to-ipcam\\haarcascades\\haarcascade_profileface.xml");
 		if (face_cascade.empty()) {
 			System.out.println("--(!)Erroring A\n");
 			return;
