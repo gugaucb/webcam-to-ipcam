@@ -20,6 +20,7 @@ import org.opencv.videoio.Videoio;
 public class OpenCVHelper {
 	private static OpenCVHelper instance = new OpenCVHelper();
 	private static BufferedImage image;
+	private boolean camAvaiable = false;
 
 	public static OpenCVHelper getInstance() {
 		return instance;
@@ -38,10 +39,13 @@ public class OpenCVHelper {
 			if (!camera.isOpened()) {
 				throw new IllegalStateException("Cannot open camera");
 			}
+			camAvaiable =true;
 		} catch (Throwable t) {
-			t.printStackTrace();
+			//t.printStackTrace();
+			System.out.println("Camera is not avaiable!");
 			if (image == null) {
 				image = getImage("D:\\Desenvolvimento\\Projetos\\webcam-to-ipcam\\fotos\\foto.jpg");
+				camAvaiable =false;
 			}
 		}
 
@@ -49,7 +53,7 @@ public class OpenCVHelper {
 
 	public BufferedImage getBufferedImage() throws IOException {
 		Processor processor = new Processor();
-		if (image == null) {
+		if (camAvaiable) {
 			Mat frame = new Mat();
 			if (camera.read(frame)) {
 				return Util.convertMatToBufferedImage(processor.detect(frame));

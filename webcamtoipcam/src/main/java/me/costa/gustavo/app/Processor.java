@@ -25,7 +25,7 @@ import org.opencv.objdetect.CascadeClassifier;
 public class Processor {
 	private CascadeClassifier face_cascade;
 
-	private static DeepFaceVariant deep = new DeepFaceVariant(480, 640, 1, 1,
+	private static DeepFaceVariant deep = new DeepFaceVariant(363, 363, 3, 1,
 			RandomUtils.nextLong(0, 20000000), 3);
 	private static MultiLayerNetwork cnn = deep.init();
 
@@ -63,7 +63,7 @@ public class Processor {
 			// Imgproc.ellipse( mRgba, center, new Size( rect.width*0.5,
 			// rect.height*0.5), 0, 0, 360, new Scalar( 255, 0, 255 ), 4, 8, 0
 			// );
-			Mat imageROI = mGrey.submat(rect);
+			Mat imageROI = mRgba.submat(rect);
 			BufferedImage face = Util.convertMatToBufferedImage(imageROI);
 			fit(face);
 			predict(face);
@@ -78,14 +78,15 @@ public class Processor {
 	private void fit(BufferedImage image) throws IOException {
 		if (cnn != null) {
 			INDArray labels = Nd4j.create(new double[] { 1 });
-			cnn.fit(Util.BufferedImageToINDArray(image), labels);
+			//cnn.pretrain(Util.BufferedImageToINDArray(image));
+			cnn.fit(Util.BufferedImageToINDArray(image));
 		}
 	}
 
 	private void predict(BufferedImage image) throws IOException {
 		if (cnn != null) {
 			System.out
-					.println(cnn.predict(Util.BufferedImageToINDArray(image)));
+					.println("Predict: "+cnn.predict(Util.BufferedImageToINDArray(image)));
 		}
 	}
 

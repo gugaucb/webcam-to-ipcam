@@ -93,7 +93,7 @@ public class DeepFaceVariant {
                         .nOut(numLabels)
                         .activation("softmax")
                         .build())
-                .backprop(true).pretrain(false)
+                .backprop(true).pretrain(true)
                 .cnnInputSize(height, width, channels)
                 .build();
 		    	

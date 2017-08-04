@@ -2,27 +2,42 @@ package me.costa.gustavo.app;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.time.LocalTime;
 
 import javax.imageio.ImageIO;
 
+import org.datavec.image.loader.ImageLoader;
+import org.datavec.image.loader.NativeImageLoader;
 import org.nd4j.linalg.api.ndarray.INDArray;
-import org.nd4j.linalg.factory.Nd4j;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 
 public class Util {
-	public static INDArray BufferedImageToINDArray(BufferedImage image) throws IOException{
-    	ByteArrayOutputStream os = new ByteArrayOutputStream();
-    	ImageIO.write(image, "jpg", os);
-    	InputStream is = new ByteArrayInputStream(os.toByteArray());
-        INDArray params = Nd4j.read(is);
-        return params;
-    }
-    
+	public static INDArray BufferedImageToINDArray(BufferedImage image) throws IOException {
+		try {
+			ImageLoader imgLoader = new ImageLoader();
+			NativeImageLoader loader = new NativeImageLoader(224, 224, 3);
+			 
+			INDArray params = loader.asMatrix(image);//imgLoader.toBgr(image);//Nd4j.read(bufferedToImg(image));
+			return params;
+		} catch (Throwable t) {
+			t.printStackTrace();
+			return null;
+		}
+	}
+	public static DataInputStream bufferedToImg(BufferedImage image) throws IOException{
+		//https://gitter.im/deeplearning4j/deeplearning4j
+		
+		File outputfile = new File("D:\\Desenvolvimento\\Projetos\\webcam-to-ipcam\\fotos\\"+LocalTime.now().toNanoOfDay()+".jpg");
+		ImageIO.write(image, "jpg", outputfile);
+		DataInputStream data = new DataInputStream(new FileInputStream(outputfile));
+		return data;
+	}
+
 	public static BufferedImage convertMatToBufferedImage(Mat mat) {
 		byte[] data = new byte[mat.width() * mat.height() * (int) mat.elemSize()];
 		int type;
