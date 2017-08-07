@@ -5,6 +5,7 @@ import org.deeplearning4j.nn.conf.GradientNormalization;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
 import org.deeplearning4j.nn.conf.Updater;
+import org.deeplearning4j.nn.conf.inputs.InputType;
 import org.deeplearning4j.nn.conf.layers.ConvolutionLayer;
 import org.deeplearning4j.nn.conf.layers.DenseLayer;
 import org.deeplearning4j.nn.conf.layers.OutputLayer;
@@ -94,7 +95,7 @@ public class DeepFaceVariant {
                         .activation("softmax")
                         .build())
                 .backprop(true).pretrain(true)
-                .cnnInputSize(height, width, channels)
+                .setInputType(InputType.convolutional(height, width, channels))
                 .build();
 		    	
     			MultiLayerNetwork network = new MultiLayerNetwork(conf);

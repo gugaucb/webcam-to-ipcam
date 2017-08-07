@@ -15,12 +15,13 @@ import org.datavec.image.loader.NativeImageLoader;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.Size;
+import org.opencv.imgproc.Imgproc;
 
 public class Util {
-	public static INDArray BufferedImageToINDArray(BufferedImage image) throws IOException {
+	public static INDArray bufferedImageToINDArray(BufferedImage image) throws IOException {
 		try {
-			ImageLoader imgLoader = new ImageLoader();
-			NativeImageLoader loader = new NativeImageLoader(224, 224, 3);
+			NativeImageLoader loader = new NativeImageLoader(image.getHeight(), image.getWidth(), 3);
 			 
 			INDArray params = loader.asMatrix(image);//imgLoader.toBgr(image);//Nd4j.read(bufferedToImg(image));
 			return params;
@@ -38,6 +39,13 @@ public class Util {
 		return data;
 	}
 
+	public static Mat resizeMat(Mat mat){
+		Size size = new Size(363, 363);
+		Mat resized = new Mat();
+		Imgproc.resize(mat, resized, size);
+		return resized;
+	}
+	
 	public static BufferedImage convertMatToBufferedImage(Mat mat) {
 		byte[] data = new byte[mat.width() * mat.height() * (int) mat.elemSize()];
 		int type;

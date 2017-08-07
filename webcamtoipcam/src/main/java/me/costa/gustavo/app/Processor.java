@@ -1,14 +1,10 @@
 package me.costa.gustavo.app;
 
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Random;
-
-import javax.imageio.ImageIO;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.lang3.RandomUtils;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
@@ -22,20 +18,26 @@ import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+
 public class Processor {
 	private CascadeClassifier face_cascade;
 
 	private static DeepFaceVariant deep = new DeepFaceVariant(363, 363, 3, 1,
 			RandomUtils.nextLong(0, 20000000), 3);
 	private static MultiLayerNetwork cnn = deep.init();
+	private static Map<INDArray, INDArray> lista = new HashMap<INDArray, INDArray>();
+	Multimap<INDArray, INDArray> multimap = ArrayListMultimap.create();
+	private static double id = 1d;
 
 	// private static final Double THRESHHOLD = 150d;
 	// Create a constructor method
 	public Processor() {
 
-		//face_cascade = new CascadeClassifier("/usr/local/Cellar/opencv3/3.2.0/share/OpenCV/haarcascades/haarcascade_profileface.xml");
-		 face_cascade=new
-		 CascadeClassifier("D:\\Desenvolvimento\\Projetos\\webcam-to-ipcam\\haarcascades\\haarcascade_profileface.xml");
+		face_cascade = new CascadeClassifier("/usr/local/Cellar/opencv3/3.2.0/share/OpenCV/haarcascades/haarcascade_profileface.xml");
+		// face_cascade=new
+		// CascadeClassifier("D:\\Desenvolvimento\\Projetos\\webcam-to-ipcam\\haarcascades\\haarcascade_profileface.xml");
 		if (face_cascade.empty()) {
 			System.out.println("--(!)Erroring A\n");
 			return;
@@ -64,9 +66,12 @@ public class Processor {
 			// rect.height*0.5), 0, 0, 360, new Scalar( 255, 0, 255 ), 4, 8, 0
 			// );
 			Mat imageROI = mRgba.submat(rect);
-			BufferedImage face = Util.convertMatToBufferedImage(imageROI);
+			BufferedImage face = Util.convertMatToBufferedImage(Util.resizeMat(imageROI));
 			fit(face);
+			System.out.println("Predict");
 			predict(face);
+			System.out.println("Output");
+			output(face);
 
 			Imgproc.rectangle(mRgba, new Point(rect.x, rect.y), new Point(
 					rect.x + rect.width, rect.y + rect.height), new Scalar(0,
@@ -77,17 +82,44 @@ public class Processor {
 
 	private void fit(BufferedImage image) throws IOException {
 		if (cnn != null) {
-			INDArray labels = Nd4j.create(new double[] { 1 });
-			//cnn.pretrain(Util.BufferedImageToINDArray(image));
-			cnn.fit(Util.BufferedImageToINDArray(image));
+			System.out.println("Treinando");
+			INDArray bufferedImageToINDArray = Util.bufferedImageToINDArray(image);
+			addFace(bufferedImageToINDArray);
+			for (Map.Entry<INDArray, INDArray> entry : lista.entrySet())
+			{
+			    //System.out.println(entry.getKey() + "/" + entry.getValue());
+			    cnn.fit(entry.getValue(), entry.getKey());
+			}
+			
+			/*Evaluation eval = new Evaluation(1);
+			eval.eval(labels, bufferedImageToINDArray, cnn);
+			System.out.println("Treinado");*/
 		}
 	}
 
-	private void predict(BufferedImage image) throws IOException {
+	private void addFace(INDArray bufferedImageToINDArray) {
+		lista.put(Nd4j.create(new double[] { id++ }), bufferedImageToINDArray);
+	}
+	
+	private void addFace(double idPredict, INDArray bufferedImageToINDArray) {
+		lista.put(Nd4j.create(new double[] { idPredict }), bufferedImageToINDArray);
+	}
+	
+	
+	private void output(BufferedImage image) throws IOException{
 		if (cnn != null) {
-			System.out
-					.println("Predict: "+cnn.predict(Util.BufferedImageToINDArray(image)));
+			System.out.println(Arrays.toString(cnn.output(Util.bufferedImageToINDArray(image)).data().asDouble()));
 		}
+	}
+	
+	private int predict(BufferedImage image) throws IOException {
+		if (cnn != null) {
+			int[] predict = cnn.predict(Util.bufferedImageToINDArray(image));
+			System.out
+					.println("Predict: "+Arrays.toString(predict));
+			return predict[0];
+		}
+		return 0;
 	}
 
 }
