@@ -30,13 +30,11 @@ public class Util {
 			return null;
 		}
 	}
-	public static DataInputStream bufferedToImg(BufferedImage image) throws IOException{
+	public static void salvarFace(BufferedImage image, long user) throws IOException{
 		//https://gitter.im/deeplearning4j/deeplearning4j
-		
-		File outputfile = new File("D:\\Desenvolvimento\\Projetos\\webcam-to-ipcam\\fotos\\"+LocalTime.now().toNanoOfDay()+".jpg");
+		new File("/Users/gustavoluisdacosta/Desenvolvimento/fotos/"+user+"//").mkdir();
+		File outputfile = new File("/Users/gustavoluisdacosta/Desenvolvimento/fotos/"+user+"//"+LocalTime.now().toNanoOfDay()+".jpg");
 		ImageIO.write(image, "jpg", outputfile);
-		DataInputStream data = new DataInputStream(new FileInputStream(outputfile));
-		return data;
 	}
 
 	public static Mat resizeMat(Mat mat){

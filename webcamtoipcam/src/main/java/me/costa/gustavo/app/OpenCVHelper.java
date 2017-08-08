@@ -52,7 +52,7 @@ public class OpenCVHelper {
 	}
 
 	public BufferedImage getBufferedImage() throws IOException {
-		Processor processor = new Processor();
+		Processor processor = Processor.getInstance();
 		if (camAvaiable) {
 			Mat frame = new Mat();
 			if (camera.read(frame)) {
